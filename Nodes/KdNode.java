@@ -16,7 +16,7 @@ public class KdNode <E> {
 	 * it has a data and a left and right child witch are public
 	 * </p>
 	 */
-	KdNode() {
+	public KdNode() {
 		this.left = null;
 		this.right = null;
 	}
@@ -30,7 +30,7 @@ public class KdNode <E> {
 	 * 
 	 * @param data is the data that KdNode saves inside
 	 */
-	KdNode(E data) {
+	public KdNode(E data) {
 		this.data = data;
 		this.left = null;
 		this.right = null;
