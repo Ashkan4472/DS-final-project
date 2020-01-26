@@ -1,7 +1,7 @@
 package Classes.Neighbor;
 
 import Classes.Bank;
-import Tree.KdTree;
+import Structures.Tree.KdTree.KdTree;;
 
 public class NeighborNode {
 	private int x[];

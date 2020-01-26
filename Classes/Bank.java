@@ -1,6 +1,6 @@
 package Classes;
 
-import Tree.KdTree;
+import Structures.Tree.KdTree.KdTree;
 
 /**
  * @author Ashkan Tofangdar <ashkan4472@gmail.com>
