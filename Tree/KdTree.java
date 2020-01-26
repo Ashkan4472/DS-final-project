@@ -1,4 +1,4 @@
-package Structures;
+package Tree;
 
 /**
  * @author      Ashkan Tofangdar <ashkan4472@gmail.com>

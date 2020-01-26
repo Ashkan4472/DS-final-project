@@ -1,4 +1,4 @@
-package Structures;
+package Tree;
 
 import Nodes.TrieNode;
 
