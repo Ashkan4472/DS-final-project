@@ -6,7 +6,7 @@ public class Stack {
 	private String a[];
 	private int currentIndex;
 
-	Stack() {
+	public Stack() {
 		this.a = new String[MAX];
 		this.currentIndex = -1;
 	}
