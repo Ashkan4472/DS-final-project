@@ -47,9 +47,22 @@ public class KdNode <E> {
 		this.y = y;
 	}
 
+	/**
+	 * this method get coordinate of node
+	 * @return an int array like [x, y]
+	 */
 	public int[] getCoordinate() {
 		int[] result = {this.x, this.y};
 		return result;
+	}
+
+	/**
+	 * this method set node coordinate.
+	 * @param coordinate an int array like [x, y]
+	 */
+	public void setCoordinate(int[] coordinate) {
+		this.x = coordinate[0];
+		this.y = coordinate[1];
 	}
 
 	@Override
