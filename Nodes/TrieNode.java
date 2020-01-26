@@ -1,5 +1,9 @@
 package Nodes;
 
+/**
+ * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
+ */
+
 public class TrieNode <E> {
 	private TrieNode<E>[] child;
 	private E data;
