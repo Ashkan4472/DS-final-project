@@ -80,4 +80,71 @@ public class KdTree <E> {
 		}
 		return searchLogic(node.right, coordinate, layer + 1);
 	}
+
+	/**
+	 * this method deletes a node with given coordinate
+	 * @param point
+	 */
+	public void delete(int[] coordinate) {
+		this.deleteLogic(this.node, coordinate, 0);
+	}
+
+	private KdNode<E> deleteLogic(KdNode<E> node, int[] coordinate, int layer) {
+		if (node == null) {
+			return null;
+		}
+
+		int xORy = layer % 2;
+		if (node.getCoordinate()[0] == coordinate[0] && node.getCoordinate()[1] == coordinate[1]) {
+			if (node.right != null) {
+				KdNode<E> min = this.findMin(node.right, xORy);
+				node.setCoordinate(min.getCoordinate());
+				node.right = deleteLogic(node.right, min.getCoordinate(), layer + 1);
+			} else if (node.left != null) {
+				KdNode<E> min = this.findMin(node.left, xORy);
+				node.setCoordinate(min.getCoordinate());
+				node.left = deleteLogic(node.left, min.getCoordinate(), layer + 1);
+			} else {
+				node = null;
+				return null;
+			}
+			return node;
+		}
+		if (coordinate[xORy] < node.getCoordinate()[xORy]) {
+			node.left = deleteLogic(node.left, coordinate, layer + 1);
+		} else {
+			node.right = deleteLogic(node.right, coordinate, layer + 1);
+		}
+		return node;
+	}
+
+	private KdNode<E> findMin(KdNode<E> node, int xORy) {
+		return findMinLogic(node, xORy, 0);
+	}
+
+	private KdNode<E> findMinLogic(KdNode<E> node, int sentXOrY, int layer) {
+		if (node == null) {
+			return null;
+		}
+		int xORy = layer % 2;
+		if (xORy == sentXOrY) {
+			if (node.left == null) {
+				return node;
+			}
+			return findMinLogic(node.left, sentXOrY, layer + 1);
+		}
+		return this.minNode(node, findMinLogic(node.left, sentXOrY, layer + 1),
+				findMinLogic(node.right, sentXOrY, layer + 1), sentXOrY);
+	}
+
+	private KdNode<E> minNode(KdNode<E> x, KdNode<E> y, KdNode<E> z, int xORy) {
+		KdNode<E> res = x;
+		if (y != null && y.getCoordinate()[xORy] < res.getCoordinate()[xORy]) {
+			res = y;
+		}
+		if (z != null && z.getCoordinate()[xORy] < res.getCoordinate()[xORy]) {
+			res = z;
+		}
+		return res;
+	}
 }
