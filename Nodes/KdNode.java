@@ -1,7 +1,7 @@
 package Nodes;
 
 /**
- * @author      Ashkan Tofangdar <address @ example.com>
+ * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
  */
 
 public class KdNode <E> {
