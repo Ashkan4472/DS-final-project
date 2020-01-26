@@ -60,4 +60,9 @@ public class Bank {
 	public void setCoordinate(int[] coordinate) {
 		this.coordinate = coordinate;
 	}
+
+	@Override
+	public String toString() {
+		return "Bank: \n" + "name: " + this.name + "\nX: " + this.coordinate[0] + "\nY: " + this.coordinate[1];
+	}
 }

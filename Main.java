@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 import Classes.Bank;
 import Classes.Branch;
+import Structures.GenericArray;
 import Structures.Stack;
 import Classes.Neighbor.NeighborNode;
 import Classes.Neighbor.Neighborhood;
@@ -144,7 +145,7 @@ public class Main {
 			return;
 		}
 
-		System.out.println("> bank name: ");
+		System.out.print("> bank name: ");
 		String bankName = getString("bank name");
 		Bank b = bankTrieTree.search(bankName);
 		if (b == null) {
@@ -152,7 +153,7 @@ public class Main {
 			return;
 		}
 
-		System.out.println("> branch name: ");
+		System.out.print("> branch name: ");
 		String branchName = getString("branch name");
 		if (branchTrieTree.search(branchName) != null) {
 			System.out.println("** There is already a branch exists with name " + branchName);
@@ -209,39 +210,38 @@ public class Main {
 			System.out.println("no bank found with name " + name);
 			return;
 		}
-		@SuppressWarnings("unchecked")
-		KdNode<Branch>[] nodes = (KdNode<Branch>[]) b.branches.getAllNodes();
-		for (KdNode<Branch> node : nodes) {
-			Branch branch =  branchTrieTree.search(node.data.getName());
-			System.out.println(branch);
+		GenericArray<Branch> nodes =  b.branches.getAllNodes();
+		for (int i = 0; i < nodes.length; i++) {
+			if (nodes.get(i) != null) {
+				System.out.println(nodes.get(i));
+			}
 		}
 	}
 
 	public static void nearestToMe(String type) {
 		int[] coordinate = new int[2];
 		System.out.println("\n** Please enter information required");
-		System.out.println("> X: ");
+		System.out.print("> X: ");
 		coordinate[0] = getNumber("X");
-		System.out.println("> Y: ");
+		System.out.print("> Y: ");
 		coordinate[1] = getNumber("Y");
 		System.out.print("The nearest bank to point given is: ");
 		if (type.equals("bank")) {
-			System.out.println(banksKdTree.nearest(coordinate));
+			System.out.println(banksKdTree.nearest(coordinate).data);
 		} else {
-			KdNode<Bank> nb = banksKdTree.nearest(coordinate);
-			Branch branch = branchTrieTree.search(nb.data.getName());
-			System.out.println(branch);
+			KdNode<Branch> nb = branchesKdTree.nearest(coordinate);
+			System.out.println(nb.data);
 		}
 	}
 
 	public static void findBankInRange() {
 		int[] coordinate = new int[2];
 		System.out.println("\n** Please enter information required");
-		System.out.println("> X: ");
+		System.out.print("> X: ");
 		coordinate[0] = getNumber("X");
-		System.out.println("> Y: ");
+		System.out.print("> Y: ");
 		coordinate[1] = getNumber("Y");
-		System.out.println("> range: ");
+		System.out.print("> range: ");
 		int range = getNumber("range");
 
 		System.out.print("Available banks are: ");
@@ -257,11 +257,10 @@ public class Main {
 	}
 
 	public static void bankWithLargestBranch() {
-		@SuppressWarnings("unchecked")
-		KdNode<Bank>[] allBanks = (KdNode<Bank>[])banksKdTree.getAllNodes();
-		Bank mostBank = bankTrieTree.search(allBanks[0].data.getName());
+		GenericArray<Bank> allBanks = banksKdTree.getAllNodes();
+		Bank mostBank = bankTrieTree.search(allBanks.get(0).getName());
 		for (int i = 1; i < allBanks.length; i++) {
-			Bank x = bankTrieTree.search(allBanks[i].data.getName());
+			Bank x = bankTrieTree.search(allBanks.get(i).getName());
 			if (x != null) {
 				if (x.getBranchNumber() > mostBank.getBranchNumber()) {
 					mostBank = x;
@@ -273,14 +272,13 @@ public class Main {
 	}
 
 	public static void famousBank() {
-		@SuppressWarnings("unchecked")
-		KdNode<Branch>[] totalBranches = (KdNode<Branch>[]) branchesKdTree.getAllNodes();
+		GenericArray<Branch> totalBranches = branchesKdTree.getAllNodes();
 
 		String[] bankNames = new String[totalBranches.length];
 		int[] branchVisitedTotal = new int[totalBranches.length];
 
-		for (KdNode<Branch> kdNode : totalBranches) {
-			Branch branch = branchTrieTree.search(kdNode.data.getName());
+		for (int index = 0; index < totalBranches.length; index++) {
+			Branch branch = branchTrieTree.search(totalBranches.get(index).getName());
 			for (int i = 0; i < totalBranches.length; i++) {
 				if (bankNames[i].isEmpty()) {
 					bankNames[i] = branch.getBankName();
@@ -397,7 +395,7 @@ public class Main {
 		else if (command.equals("fameB")) {
 			famousBank();
 		}
-		else if (command.substring(0, command.indexOf(" ")).equals("undo")) {
+		else if (command.indexOf("undo ") == 0) {
 			String number = command.substring(command.indexOf(" ") + 1);
 			if (number.matches(".*[^0-9].*")) {
 				System.out.println("*** you need to enter a number after undo");

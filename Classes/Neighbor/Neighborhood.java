@@ -43,7 +43,7 @@ public class Neighborhood {
 	}
 
 	public NeighborNode search(int x[], int y[]) {
-		for (int i = 0; i < this.currentIndex; i++) {
+		for (int i = 0; i <= this.currentIndex; i++) {
 			if (
 				neighbors[i].getXCoordinate()[0] == x[0] && 
 				neighbors[i].getXCoordinate()[1] == x[1] &&
@@ -57,7 +57,7 @@ public class Neighborhood {
 	}
 	
 	public NeighborNode search(String name) {
-		for (int i = 0; i < this.currentIndex; i++) {
+		for (int i = 0; i <= this.currentIndex; i++) {
 			if (neighbors[i].getName().equals(name)) {
 				return neighbors[i];
 			}
@@ -66,9 +66,9 @@ public class Neighborhood {
 	}
 
 	public NeighborNode[] searchArea(int x, int y) {
-		NeighborNode[] result = new NeighborNode[this.currentIndex];
+		NeighborNode[] result = new NeighborNode[this.currentIndex + 1];
 		int counter = -1;
-		for (int i = 0; i < this.currentIndex; i++) {
+		for (int i = 0; i <= this.currentIndex; i++) {
 			if (
 				x >= neighbors[i].getXCoordinate()[0] && 
 				x <= neighbors[i].getXCoordinate()[1] &&
@@ -84,7 +84,7 @@ public class Neighborhood {
 
 	public void delete(int x[], int y[]) {
 		int foundIndex = -1;
-		for (int i = 0; i < this.currentIndex; i++) {
+		for (int i = 0; i <= this.currentIndex; i++) {
 			if (
 				neighbors[i].getXCoordinate()[0] == x[0] && 
 				neighbors[i].getXCoordinate()[1] == x[1] &&
@@ -96,7 +96,7 @@ public class Neighborhood {
 			}
 		}
 
-		for (int i = foundIndex; i < this.currentIndex - 1; i++) {
+		for (int i = foundIndex; i < this.currentIndex; i++) {
 			this.neighbors[i] = this.neighbors[i + 1];
 		}
 		this.neighbors[currentIndex] = null;

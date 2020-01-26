@@ -23,6 +23,8 @@ public class NeighborNode {
 			y[0] = y[1];
 			y[1] = tmp;
 		}
+		this.x = x;
+		this.y = y;
 		this.name = name;
 		this.banks = new KdTree<Bank>();
 	}
@@ -41,6 +43,8 @@ public class NeighborNode {
 			y[0] = y[1];
 			y[1] = tmp;
 		}
+		this.x = x;
+		this.y = y;
 		this.name = name;
 		this.banks = new KdTree<Bank>();
 		for (Bank bank : banks) {

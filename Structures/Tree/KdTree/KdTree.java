@@ -1,5 +1,7 @@
 package Structures.Tree.KdTree;
 
+import Structures.GenericArray;
+
 /**
  * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
  */
@@ -173,7 +175,7 @@ public class KdTree <E> {
 		return closestNode;
 	}
 
-	private double minDist;
+	private double minDist = Double.MAX_VALUE;
 	private KdNode<E> closestNode;
 	private void nearestLogic(KdNode<E> head, int[] coordinate, int layer) {
 		if (head.left == null && head.right == null) {
@@ -185,13 +187,17 @@ public class KdTree <E> {
 		} else {
 			int xORy = layer % 2;
 			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
-				nearestLogic(head.left, coordinate, layer + 1);
-				if (coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				if (head.left != null) {
+					nearestLogic(head.left, coordinate, layer + 1);
+				}
+				if (head.right != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
 					nearestLogic(head.right, coordinate, layer + 1);
 				}
 			} else {
-				nearestLogic(head.right, coordinate, layer + 1);
-				if (coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				if (head.right != null) {
+					nearestLogic(head.right, coordinate, layer + 1);
+				}
+				if (head.left != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
 					nearestLogic(head.left, coordinate, layer + 1);
 				}
 			}
@@ -237,14 +243,14 @@ public class KdTree <E> {
 		}
 	}
 
-	private Object[] allNodes;
+	private GenericArray<E> allNodes;
 	/**
 	 * returns an array of object (need to convert to KdNode) with all nodes
 	 * @return
 	 */
-	public Object[] getAllNodes() {
+	public GenericArray<E> getAllNodes() {
 		this.counter = -1;
-		allNodes = new Object[1000];
+		allNodes = new GenericArray<E>(1000);
 		this.getAllNodesLogic(this.node);
 		return allNodes;
 	}
@@ -254,7 +260,7 @@ public class KdTree <E> {
 			return;
 		}
 		counter++;
-		this.allNodes[counter] = node;
+		this.allNodes.set(counter, node.data);
 		this.getAllNodesLogic(node.left);
 		this.getAllNodesLogic(node.right);
 	}
