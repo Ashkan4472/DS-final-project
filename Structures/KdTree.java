@@ -163,4 +163,39 @@ public class KdTree <E> {
 		printRecursive(head.left);
 		printRecursive(head.right);
 	}
+
+	/**
+	 * this method return nearest node to a given coordinate
+	 * @param coordinate
+	 * @return nearest node
+	 */
+	public KdNode<E> nearest(int[] coordinate) {
+		nearestLogic(this.node, coordinate, 0);
+		return closestNode;
+	}
+
+	private double minDist;
+	private KdNode<E> closestNode;
+	private void nearestLogic(KdNode<E> head, int[] coordinate, int layer) {
+		if (head.left == null && head.right == null) {
+			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+			if (dist < minDist) {
+				this.minDist = dist;
+				this.closestNode = head;
+			}
+		} else {
+			int xORy = layer % 2;
+			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+				nearestLogic(head.left, coordinate, layer + 1);
+				if (coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+					nearestLogic(head.right, coordinate, layer + 1);
+				}
+			} else {
+				nearestLogic(head.right, coordinate, layer + 1);
+				if (coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+					nearestLogic(head.left, coordinate, layer + 1);
+				}
+			}
+		}
+	}
 }
