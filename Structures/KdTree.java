@@ -147,4 +147,20 @@ public class KdTree <E> {
 		}
 		return res;
 	}
+
+	/**
+	 * this method prints all nodes in tree
+	 */
+	public void printAll() {
+		printRecursive(this.node);
+	}
+
+	private void printRecursive(KdNode<E> head) {
+		if (head == null) {
+			return;
+		}
+		System.out.println(head);
+		printRecursive(head.left);
+		printRecursive(head.right);
+	}
 }
