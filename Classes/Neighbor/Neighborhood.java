@@ -55,6 +55,15 @@ public class Neighborhood {
 		}
 		return null;
 	}
+	
+	public NeighborNode search(String name) {
+		for (int i = 0; i < this.currentIndex; i++) {
+			if (neighbors[i].getName().equals(name)) {
+				return neighbors[i];
+			}
+		}
+		return null;
+	}
 
 	public NeighborNode[] searchArea(int x, int y) {
 		NeighborNode[] result = new NeighborNode[this.currentIndex];
