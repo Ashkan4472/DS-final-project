@@ -1,7 +1,7 @@
 package Structures;
 
 /**
- * @author      Ashkan Tofangdar <address @ example.com>
+ * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
  */
 
 import Nodes.KdNode;
