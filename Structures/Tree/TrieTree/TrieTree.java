@@ -26,6 +26,20 @@ public class TrieTree <E> {
 		}
 		T.setIsEndOfWord(true, data);
 	}
+
+	/**
+	 * this method will search and find a data with given name
+	 * @param name the string to search with
+	 * @return data represent the name
+	 */
+	public E search(String name) {
+		TrieNode<E> T = findNode(name);
+		if (T != null && T.getIsEndOfWord()) {
+			return T.getData();
+		} else {
+			return null;
+		}
+	}
 	
 	/**
 	 * this method will search and find a node with given name
