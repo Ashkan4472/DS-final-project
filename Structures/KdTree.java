@@ -237,4 +237,26 @@ public class KdTree <E> {
 			}
 		}
 	}
+
+	private Object[] allNodes;
+	/**
+	 * returns an array of object (need to convert to KdNode) with all nodes
+	 * @return
+	 */
+	public Object[] getAllNodes() {
+		this.counter = -1;
+		allNodes = new Object[1000];
+		this.getAllNodesLogic(this.node);
+		return allNodes;
+	}
+
+	private void getAllNodesLogic(KdNode<E> node) {
+		if (node == null) {
+			return;
+		}
+		counter++;
+		this.allNodes[counter] = node;
+		this.getAllNodesLogic(node.left);
+		this.getAllNodesLogic(node.right);
+	}
 }
