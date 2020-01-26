@@ -7,6 +7,7 @@ public class TrieNode <E> {
 	private final int NUMBER_OF_CHARACTERS = 26 + 26 + 10; // uppercase + lowercase + number.
 
 	@SuppressWarnings("unchecked")
+	public
 	TrieNode() {
 		this.child = new TrieNode[this.NUMBER_OF_CHARACTERS];
 		this.isEndOfWord = false;
