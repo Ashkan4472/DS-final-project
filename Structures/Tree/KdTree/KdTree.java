@@ -1,10 +1,9 @@
-package Tree;
+package Structures.Tree.KdTree;
 
 /**
  * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
  */
 
-import Nodes.KdNode;
 
 public class KdTree <E> {
 	private KdNode<E> node;

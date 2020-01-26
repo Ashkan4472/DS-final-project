@@ -1,4 +1,4 @@
-package Nodes;
+package Structures.Tree.TrieTree;
 
 /**
  * @author      Ashkan Tofangdar <ashkan4472@gmail.com>

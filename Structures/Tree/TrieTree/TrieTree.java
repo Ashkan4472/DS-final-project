@@ -1,6 +1,4 @@
-package Tree;
-
-import Nodes.TrieNode;
+package Structures.Tree.TrieTree;
 
 public class TrieTree <E> {
 	private TrieNode<E> head;

@@ -1,4 +1,4 @@
-package Nodes;
+package Structures.Tree.KdTree;
 
 /**
  * @author      Ashkan Tofangdar <ashkan4472@gmail.com>
