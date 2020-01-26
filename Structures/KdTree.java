@@ -198,4 +198,43 @@ public class KdTree <E> {
 			}
 		}
 	}
+
+	private Object[] inRange;
+	private int counter = 0;
+	/**
+	 * returns an array of objects with KdNodes object of nodes in given coordinate and radius of range
+	 * @param coordinate
+	 * @param range
+	 * @return an array of Objects with KdNodes (need convert)
+	 */
+	public Object[] findAllInRange(int[] coordinate, int range) {
+		this.counter = 0;
+		// TODO: use custom array later.
+		inRange = new Object[1000];
+		findAllInRangeLogic(this.node, coordinate, range, 0);
+		return inRange;
+	}
+
+	private void findAllInRangeLogic(KdNode<E> head, int[] coordinate, int range, int layer) {
+		if (head.left == null && head.right == null) {
+			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+			if (dist <= range) {
+				inRange[counter] = head;
+				this.counter++;
+			}
+		} else {
+			int xORy = layer % 2;
+			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+				findAllInRangeLogic(head.left, coordinate, range, layer + 1);
+				if (coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+					findAllInRangeLogic(head.right, coordinate, range, layer + 1);
+				}
+			} else {
+				findAllInRangeLogic(head.right, coordinate, range, layer + 1);
+				if (coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+					findAllInRangeLogic(head.left, coordinate, range, layer + 1);
+				}
+			}
+		}
+	}
 }
