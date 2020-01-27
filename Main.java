@@ -63,7 +63,7 @@ public class Main {
 		while (y[0] == y[1]) {
 			System.out.println("** Y0 and Y1 cannot be same **");
 			System.out.print("> Y1: ");
-			x[1] = getNumber("Y1");
+			y[1] = getNumber("Y1");
 		}
 		System.out.print("> name: ");
 		String name = getString("name");
