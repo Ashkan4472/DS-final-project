@@ -158,7 +158,7 @@ public class Main {
 			System.out.println("** There is already a branch exists with name " + branchName);
 		}
 
-		Branch branch = new Branch(coordinate, bankName, branchName);
+		Branch branch = new Branch(coordinate, branchName, bankName);
 		branchTrieTree.insert(branchName, branch);
 		branchesKdTree.addPoint(coordinate, branch);
 		b.addBranch(branch);
@@ -181,6 +181,7 @@ public class Main {
 		}
 
 		Bank b = bankTrieTree.search(branch.getBankName());
+		System.out.println(b);
 		b.deleteBranch(branch);
 		branchesKdTree.delete(coordinate);
 		branchTrieTree.delete(branch.getName());
