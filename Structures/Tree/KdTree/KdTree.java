@@ -220,28 +220,27 @@ public class KdTree <E> {
 	}
 
 	private void findAllInRangeLogic(KdNode<E> head, int[] coordinate, int range, int layer) {
-		if (head.left == null && head.right == null) {
-			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
-			if (dist <= range) {
-				inRange.set(counter, head.data);
-				this.counter++;
+		if (head == null)
+			return;
+		double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+		if (dist <= range) {
+			inRange.set(counter, head.data);
+			this.counter++;
+		}
+		int xORy = layer % 2;
+		if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+			if (head.left != null) {
+				findAllInRangeLogic(head.left, coordinate, range, layer + 1);
+			}
+			if (head.right != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+				findAllInRangeLogic(head.right, coordinate, range, layer + 1);
 			}
 		} else {
-			int xORy = layer % 2;
-			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
-				if (head.left != null) {
-					findAllInRangeLogic(head.left, coordinate, range, layer + 1);
-				}
-				if (head.right != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
-					findAllInRangeLogic(head.right, coordinate, range, layer + 1);
-				}
-			} else {
-				if (head.right != null) {
-					findAllInRangeLogic(head.right, coordinate, range, layer + 1);
-				}
-				if (head.left != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
-					findAllInRangeLogic(head.left, coordinate, range, layer + 1);
-				}
+			if (head.right != null) {
+				findAllInRangeLogic(head.right, coordinate, range, layer + 1);
+			}
+			if (head.left != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+				findAllInRangeLogic(head.left, coordinate, range, layer + 1);
 			}
 		}
 	}
