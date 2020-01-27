@@ -43,10 +43,10 @@ public class KdTree <E> {
 	private KdNode<E> addPointLogic(KdNode<E> node, int[] coordinate, E data, int layer) {
 		if (node != null) {
 			int xORy = layer % 2;
-			if (node.getCoordinate()[xORy] >= coordinate[xORy]) {
-				node.right = addPointLogic(node.right, coordinate, data, layer + 1);
-			} else {
+			if (coordinate[xORy] < node.getCoordinate()[xORy]) {
 				node.left = addPointLogic(node.left, coordinate, data, layer + 1);
+			} else {
+				node.right = addPointLogic(node.right, coordinate, data, layer + 1);
 			}
 			return node;
 		} else {
@@ -87,7 +87,7 @@ public class KdTree <E> {
 	 * @param point
 	 */
 	public void delete(int[] coordinate) {
-		this.deleteLogic(this.node, coordinate, 0);
+		this.node = this.deleteLogic(this.node, coordinate, 0);
 	}
 
 	private KdNode<E> deleteLogic(KdNode<E> node, int[] coordinate, int layer) {
@@ -100,10 +100,12 @@ public class KdTree <E> {
 			if (node.right != null) {
 				KdNode<E> min = this.findMin(node.right, xORy);
 				node.setCoordinate(min.getCoordinate());
+				node.data = min.data;
 				node.right = deleteLogic(node.right, min.getCoordinate(), layer + 1);
 			} else if (node.left != null) {
 				KdNode<E> min = this.findMin(node.left, xORy);
 				node.setCoordinate(min.getCoordinate());
+				node.data = min.data;
 				node.left = deleteLogic(node.left, min.getCoordinate(), layer + 1);
 			} else {
 				node = null;
@@ -172,6 +174,7 @@ public class KdTree <E> {
 	 */
 	public KdNode<E> nearest(int[] coordinate) {
 		nearestLogic(this.node, coordinate, 0);
+		this.minDist = Double.MAX_VALUE;
 		return closestNode;
 	}
 
@@ -181,7 +184,7 @@ public class KdTree <E> {
 		if (head == null)
 			return;
 		double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
-		if (dist <= minDist) {
+		if (dist < minDist) {
 			this.minDist = dist;
 			this.closestNode = head;
 		}

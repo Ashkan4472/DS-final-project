@@ -257,7 +257,7 @@ public class Main {
 	public static void bankWithLargestBranch() {
 		GenericArray<Bank> allBanks = banksKdTree.getAllNodes();
 		Bank mostBank = bankTrieTree.search(allBanks.get(0).getName());
-		for (int i = 1; i < allBanks.length; i++) {
+		for (int i = 1; i < allBanks.length && allBanks.get(i) != null; i++) {
 			Bank x = bankTrieTree.search(allBanks.get(i).getName());
 			if (x != null) {
 				if (x.getBranchNumber() > mostBank.getBranchNumber()) {
@@ -277,6 +277,8 @@ public class Main {
 
 		for (int index = 0; index < totalBranches.length; index++) {
 			Branch branch = branchTrieTree.search(totalBranches.get(index).getName());
+			if (branch == null)
+				break;
 			for (int i = 0; i < totalBranches.length; i++) {
 				if (bankNames[i] == null || bankNames[i].equals("")) {
 					bankNames[i] = branch.getBankName();
@@ -294,7 +296,9 @@ public class Main {
 			}
 		}
 
-		System.out.println(bankTrieTree.search(bankNames[index]));
+		if (bankNames[index] != null && !bankNames[index].equals("")) {
+			System.out.println(bankTrieTree.search(bankNames[index]));
+		}
 	}
 
 	public static void undo(int until) {
@@ -321,6 +325,13 @@ public class Main {
 					Integer.parseInt(done.substring(done.indexOf("y=") + 2, done.indexOf(" name=")))
 				};
 				String name = done.substring(done.indexOf("name=") + 5);
+				NeighborNode[] nn = neighborhoods.searchArea(coordinate[0], coordinate[1]);
+				for (NeighborNode neighborNode : nn) {
+					if (neighborNode == null) {
+						break;
+					}
+					neighborNode.banks.delete(coordinate);
+				}
 				bankTrieTree.delete(name);
 				banksKdTree.delete(coordinate);
 			}
