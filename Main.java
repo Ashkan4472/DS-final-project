@@ -245,13 +245,12 @@ public class Main {
 		int range = getNumber("range");
 
 		System.out.print("Available banks are: ");
-		@SuppressWarnings("unchecked")
-		KdNode<Bank>[] availBanks = (KdNode<Bank>[])banksKdTree.findAllInRange(coordinate, range);
-		for (KdNode<Bank> b : availBanks) {
-			if (b == null) {
+		GenericArray<Bank> availBanks = banksKdTree.findAllInRange(coordinate, range);
+		for (int i = 0; i < availBanks.length; i++) {
+			if (availBanks.get(i) == null) {
 				break;
 			} else {
-				System.out.println(b);
+				System.out.println(availBanks.get(i));
 			}
 		}
 	}
@@ -280,7 +279,7 @@ public class Main {
 		for (int index = 0; index < totalBranches.length; index++) {
 			Branch branch = branchTrieTree.search(totalBranches.get(index).getName());
 			for (int i = 0; i < totalBranches.length; i++) {
-				if (bankNames[i].isEmpty()) {
+				if (bankNames[i] == null || bankNames[i].equals("")) {
 					bankNames[i] = branch.getBankName();
 					branchVisitedTotal[i] += branch.getVisited();
 				} else if (bankNames[i].equals(branch.getBankName())) {
@@ -303,7 +302,7 @@ public class Main {
 		String done = "";
 		for (int i = 0; i < until; i++) {
 			done = commands.pop();
-			String command = done.substring(0, done.indexOf(" ") + 1);
+			String command = done.substring(0, done.indexOf(" "));
 
 			if (command.equals("addN")) {
 				int[] x = {
