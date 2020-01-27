@@ -178,28 +178,27 @@ public class KdTree <E> {
 	private double minDist = Double.MAX_VALUE;
 	private KdNode<E> closestNode;
 	private void nearestLogic(KdNode<E> head, int[] coordinate, int layer) {
-		if (head.left == null && head.right == null) {
-			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
-			if (dist <= minDist) {
-				this.minDist = dist;
-				this.closestNode = head;
+		if (head == null)
+			return;
+		double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+		if (dist <= minDist) {
+			this.minDist = dist;
+			this.closestNode = head;
+		}
+		int xORy = layer % 2;
+		if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+			if (head.left != null) {
+				nearestLogic(head.left, coordinate, layer + 1);
+			}
+			if (head.right != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				nearestLogic(head.right, coordinate, layer + 1);
 			}
 		} else {
-			int xORy = layer % 2;
-			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
-				if (head.left != null) {
-					nearestLogic(head.left, coordinate, layer + 1);
-				}
-				if (head.right != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
-					nearestLogic(head.right, coordinate, layer + 1);
-				}
-			} else {
-				if (head.right != null) {
-					nearestLogic(head.right, coordinate, layer + 1);
-				}
-				if (head.left != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
-					nearestLogic(head.left, coordinate, layer + 1);
-				}
+			if (head.right != null) {
+				nearestLogic(head.right, coordinate, layer + 1);
+			}
+			if (head.left != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				nearestLogic(head.left, coordinate, layer + 1);
 			}
 		}
 	}
