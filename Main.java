@@ -26,7 +26,6 @@ public class Main {
 		initialize();
 		while (true) {
 			getCommand();
-			System.out.println(commands);
 		}
 	}
 
