@@ -374,10 +374,10 @@ class KdTree <E> {
 	private KdNode<E> addPointLogic(KdNode<E> node, int[] coordinate, E data, int layer) {
 		if (node != null) {
 			int xORy = layer % 2;
-			if (node.getCoordinate()[xORy] >= coordinate[xORy]) {
-				node.right = addPointLogic(node.right, coordinate, data, layer + 1);
-			} else {
+			if (coordinate[xORy] < node.getCoordinate()[xORy]) {
 				node.left = addPointLogic(node.left, coordinate, data, layer + 1);
+			} else {
+				node.right = addPointLogic(node.right, coordinate, data, layer + 1);
 			}
 			return node;
 		} else {
@@ -418,7 +418,7 @@ class KdTree <E> {
 	 * @param point
 	 */
 	public void delete(int[] coordinate) {
-		this.deleteLogic(this.node, coordinate, 0);
+		this.node = this.deleteLogic(this.node, coordinate, 0);
 	}
 
 	private KdNode<E> deleteLogic(KdNode<E> node, int[] coordinate, int layer) {
@@ -431,10 +431,12 @@ class KdTree <E> {
 			if (node.right != null) {
 				KdNode<E> min = this.findMin(node.right, xORy);
 				node.setCoordinate(min.getCoordinate());
+				node.data = min.data;
 				node.right = deleteLogic(node.right, min.getCoordinate(), layer + 1);
 			} else if (node.left != null) {
 				KdNode<E> min = this.findMin(node.left, xORy);
 				node.setCoordinate(min.getCoordinate());
+				node.data = min.data;
 				node.left = deleteLogic(node.left, min.getCoordinate(), layer + 1);
 			} else {
 				node = null;
@@ -503,34 +505,34 @@ class KdTree <E> {
 	 */
 	public KdNode<E> nearest(int[] coordinate) {
 		nearestLogic(this.node, coordinate, 0);
+		this.minDist = Double.MAX_VALUE;
 		return closestNode;
 	}
 
 	private double minDist = Double.MAX_VALUE;
 	private KdNode<E> closestNode;
 	private void nearestLogic(KdNode<E> head, int[] coordinate, int layer) {
-		if (head.left == null && head.right == null) {
-			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
-			if (dist <= minDist) {
-				this.minDist = dist;
-				this.closestNode = head;
+		if (head == null)
+			return;
+		double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+		if (dist < minDist) {
+			this.minDist = dist;
+			this.closestNode = head;
+		}
+		int xORy = layer % 2;
+		if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+			if (head.left != null) {
+				nearestLogic(head.left, coordinate, layer + 1);
+			}
+			if (head.right != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				nearestLogic(head.right, coordinate, layer + 1);
 			}
 		} else {
-			int xORy = layer % 2;
-			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
-				if (head.left != null) {
-					nearestLogic(head.left, coordinate, layer + 1);
-				}
-				if (head.right != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
-					nearestLogic(head.right, coordinate, layer + 1);
-				}
-			} else {
-				if (head.right != null) {
-					nearestLogic(head.right, coordinate, layer + 1);
-				}
-				if (head.left != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
-					nearestLogic(head.left, coordinate, layer + 1);
-				}
+			if (head.right != null) {
+				nearestLogic(head.right, coordinate, layer + 1);
+			}
+			if (head.left != null && coordinate[xORy] + minDist >= head.getCoordinate()[xORy]) {
+				nearestLogic(head.left, coordinate, layer + 1);
 			}
 		}
 	}
@@ -552,28 +554,27 @@ class KdTree <E> {
 	}
 
 	private void findAllInRangeLogic(KdNode<E> head, int[] coordinate, int range, int layer) {
-		if (head.left == null && head.right == null) {
-			double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
-			if (dist <= range) {
-				inRange.set(counter, head.data);
-				this.counter++;
+		if (head == null)
+			return;
+		double dist = Math.pow((head.getCoordinate()[0] - coordinate[0]), 2) + Math.pow((head.getCoordinate()[1] - coordinate[1]), 2);
+		if (dist <= range) {
+			inRange.set(counter, head.data);
+			this.counter++;
+		}
+		int xORy = layer % 2;
+		if (coordinate[xORy] < head.getCoordinate()[xORy]) {
+			if (head.left != null) {
+				findAllInRangeLogic(head.left, coordinate, range, layer + 1);
+			}
+			if (head.right != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+				findAllInRangeLogic(head.right, coordinate, range, layer + 1);
 			}
 		} else {
-			int xORy = layer % 2;
-			if (coordinate[xORy] < head.getCoordinate()[xORy]) {
-				if (head.left != null) {
-					findAllInRangeLogic(head.left, coordinate, range, layer + 1);
-				}
-				if (head.right != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
-					findAllInRangeLogic(head.right, coordinate, range, layer + 1);
-				}
-			} else {
-				if (head.right != null) {
-					findAllInRangeLogic(head.right, coordinate, range, layer + 1);
-				}
-				if (head.left != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
-					findAllInRangeLogic(head.left, coordinate, range, layer + 1);
-				}
+			if (head.right != null) {
+				findAllInRangeLogic(head.right, coordinate, range, layer + 1);
+			}
+			if (head.left != null && coordinate[xORy] + range > head.getCoordinate()[xORy]) {
+				findAllInRangeLogic(head.left, coordinate, range, layer + 1);
 			}
 		}
 	}
@@ -600,7 +601,6 @@ class KdTree <E> {
 		this.getAllNodesLogic(node.right);
 	}
 }
-
 
 class TrieNode <E> {
 	private TrieNode<E>[] child;
@@ -912,7 +912,7 @@ public class Main {
 		while (y[0] == y[1]) {
 			System.out.println("** Y0 and Y1 cannot be same **");
 			System.out.print("> Y1: ");
-			x[1] = getNumber("Y1");
+			y[1] = getNumber("Y1");
 		}
 		System.out.print("> name: ");
 		String name = getString("name");
@@ -1007,7 +1007,7 @@ public class Main {
 			System.out.println("** There is already a branch exists with name " + branchName);
 		}
 
-		Branch branch = new Branch(coordinate, bankName, branchName);
+		Branch branch = new Branch(coordinate, branchName, bankName);
 		branchTrieTree.insert(branchName, branch);
 		branchesKdTree.addPoint(coordinate, branch);
 		b.addBranch(branch);
@@ -1030,6 +1030,7 @@ public class Main {
 		}
 
 		Bank b = bankTrieTree.search(branch.getBankName());
+		System.out.println(b);
 		b.deleteBranch(branch);
 		branchesKdTree.delete(coordinate);
 		branchTrieTree.delete(branch.getName());
@@ -1106,7 +1107,7 @@ public class Main {
 	public static void bankWithLargestBranch() {
 		GenericArray<Bank> allBanks = banksKdTree.getAllNodes();
 		Bank mostBank = bankTrieTree.search(allBanks.get(0).getName());
-		for (int i = 1; i < allBanks.length; i++) {
+		for (int i = 1; i < allBanks.length && allBanks.get(i) != null; i++) {
 			Bank x = bankTrieTree.search(allBanks.get(i).getName());
 			if (x != null) {
 				if (x.getBranchNumber() > mostBank.getBranchNumber()) {
@@ -1126,6 +1127,8 @@ public class Main {
 
 		for (int index = 0; index < totalBranches.length; index++) {
 			Branch branch = branchTrieTree.search(totalBranches.get(index).getName());
+			if (branch == null)
+				break;
 			for (int i = 0; i < totalBranches.length; i++) {
 				if (bankNames[i] == null || bankNames[i].equals("")) {
 					bankNames[i] = branch.getBankName();
@@ -1143,7 +1146,9 @@ public class Main {
 			}
 		}
 
-		System.out.println(bankTrieTree.search(bankNames[index]));
+		if (bankNames[index] != null && !bankNames[index].equals("")) {
+			System.out.println(bankTrieTree.search(bankNames[index]));
+		}
 	}
 
 	public static void undo(int until) {
@@ -1161,7 +1166,7 @@ public class Main {
 					Integer.parseInt(done.substring(done.indexOf("y0=") + 3, done.indexOf(" y1="))),
 					Integer.parseInt(done.substring(done.indexOf("y1=") + 3, done.indexOf(" name=")))
 				};
-				// String name = done.substring(done.indexOf("name=") + 5);
+				String name = done.substring(done.indexOf("name=") + 5);
 				neighborhoods.delete(x, y);
 			}
 			else if (command.equals("addB")) {
@@ -1170,6 +1175,13 @@ public class Main {
 					Integer.parseInt(done.substring(done.indexOf("y=") + 2, done.indexOf(" name=")))
 				};
 				String name = done.substring(done.indexOf("name=") + 5);
+				NeighborNode[] nn = neighborhoods.searchArea(coordinate[0], coordinate[1]);
+				for (NeighborNode neighborNode : nn) {
+					if (neighborNode == null) {
+						break;
+					}
+					neighborNode.banks.delete(coordinate);
+				}
 				bankTrieTree.delete(name);
 				banksKdTree.delete(coordinate);
 			}
